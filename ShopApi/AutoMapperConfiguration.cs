@@ -9,7 +9,7 @@ namespace ShopApi
         public AutoMapperConfiguration()
         {
             CreateMap<Category, CategoryDto>();
-            //CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>();
         }
     }
 }

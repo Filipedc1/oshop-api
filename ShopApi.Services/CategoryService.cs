@@ -3,6 +3,7 @@ using ShopApi.Data;
 using ShopApi.Data.Interfaces;
 using ShopApi.Data.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShopApi.Services
@@ -18,7 +19,9 @@ namespace ShopApi.Services
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
-            return await _database.Categories.ToListAsync();
+            return await _database.Categories
+                                  .OrderBy(x => x.Name)
+                                  .ToListAsync();
         }
     }
 }
