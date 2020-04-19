@@ -25,7 +25,9 @@ namespace ShopApi.Services
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            return await _database.Products
+                                  .Include(x => x.Category)
+                                  .FirstOrDefaultAsync();
         }
 
         public async Task AddProductAsync(Product product)

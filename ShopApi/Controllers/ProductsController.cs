@@ -58,7 +58,17 @@ namespace ShopApi.Controllers
             if (product == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<ProductDto>(product));
+            //_mapper.Map<ProductDto>(product)
+            var dto = new ProductDto
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                Category = product.Category.CategoryId
+            };
+
+            return Ok(dto);
         }
 
         // POST  /products
