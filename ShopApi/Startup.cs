@@ -12,7 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ShopApi.Data;
+using ShopApi.Data.Interfaces;
 using ShopApi.Data.Models;
+using ShopApi.Services;
 using System.Text;
 
 [assembly: ApiController]
@@ -85,6 +87,7 @@ namespace ShopApi
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddScoped<ICategoryService, CategoryService>();
             //services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers()

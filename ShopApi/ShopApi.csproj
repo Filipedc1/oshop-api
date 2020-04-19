@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShopApi.Data\ShopApi.Data.csproj" />
+    <ProjectReference Include="..\ShopApi.Services\ShopApi.Services.csproj" />
   </ItemGroup>
 
 
