@@ -7,5 +7,6 @@ namespace ShopApi.Data.Interfaces
     public interface ICategoryService
     {
         Task<List<Category>> GetAllCategoriesAsync();
+        Task<Category> GetCategoryByIdAsync(int categoryId);
     }
 }

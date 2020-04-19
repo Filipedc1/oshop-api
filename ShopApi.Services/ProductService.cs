@@ -1,4 +1,5 @@
-﻿using ShopApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopApi.Data;
 using ShopApi.Data.Interfaces;
 using ShopApi.Data.Models;
 using System.Collections.Generic;
@@ -15,23 +16,25 @@ namespace ShopApi.Services
             _database = context;
         }
 
-        public Task<List<Product>> GetAllProductsAsync()
+        public async Task<List<Product>> GetAllProductsAsync()
         {
-            throw new System.NotImplementedException();
+            return await _database.Products
+                                  .Include(x => x.Category)
+                                  .ToListAsync();
         }
 
-        public Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
         public async Task AddProductAsync(Product product)
         {
-            await _database.AddAsync(product);
+            await _database.Products.AddAsync(product);
             await _database.SaveChangesAsync();
         }
 
-        public Task DeleteProductAsync(int id)
+        public async Task DeleteProductAsync(int id)
         {
             throw new System.NotImplementedException();
         }

@@ -15,12 +15,14 @@ namespace ShopApi.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService, IMapper mapper)
+        public ProductsController(IProductService productService, ICategoryService categoryService, IMapper mapper)
         {
             _productService = productService;
             _mapper = mapper;
+            _categoryService = categoryService;
         }
 
         // GET  /products
@@ -33,7 +35,17 @@ namespace ShopApi.Controllers
             if (products == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
+            //_mapper.Map<IEnumerable<ProductDto>>(products)
+            var dtos = products.Select(x => new ProductDto
+            {
+                ProductId = x.ProductId,
+                Name = x.Name,
+                Price = x.Price,
+                ImageUrl = x.ImageUrl,
+                Category = x.Category.CategoryId
+            });
+
+            return Ok(dtos);
         }
 
         // GET  /products/12
@@ -58,7 +70,15 @@ namespace ShopApi.Controllers
 
             try
             {
-                var product = _mapper.Map<Product>(productDto);
+                var product = new Product
+                {
+                    ProductId = productDto.ProductId,
+                    Name = productDto.Name,
+                    Price = productDto.Price,
+                    ImageUrl = productDto.ImageUrl,
+                    Category = await _categoryService.GetCategoryByIdAsync(productDto.Category)
+                };
+
                 await _productService.AddProductAsync(product);
             }
             catch(Exception e)

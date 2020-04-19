@@ -23,5 +23,11 @@ namespace ShopApi.Services
                                   .OrderBy(x => x.Name)
                                   .ToListAsync();
         }
+
+        public async Task<Category> GetCategoryByIdAsync(int categoryId)
+        {
+            return await _database.Categories
+                                  .FirstOrDefaultAsync(x => x.CategoryId == categoryId);
+        }
     }
 }
