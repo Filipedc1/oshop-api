@@ -73,7 +73,6 @@ namespace ShopApi.Controllers
 
         // POST  /products
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult> AddProductAsync(ProductDto productDto)
         {
             if (productDto is null) return NotFound();
@@ -92,6 +91,54 @@ namespace ShopApi.Controllers
                 await _productService.AddProductAsync(product);
             }
             catch(Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        // PUT  /products/12
+        [HttpPut("{productId}")]
+        public async Task<ActionResult> UpdateProductAsync(int productId, ProductDto productDto)
+        {
+            if (productDto == null) 
+                return BadRequest();
+
+            try
+            {
+                var product = await _productService.GetProductByIdAsync(productId);
+                if (product == null) 
+                    return NotFound();
+
+                product.Name = productDto.Name;
+                product.Price = productDto.Price;
+                product.ImageUrl = productDto.ImageUrl;
+                product.Category = await _categoryService.GetCategoryByIdAsync(productDto.Category);
+
+                await _productService.UpdateProductAsync(product);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        // DELETE  /products/12
+        [HttpDelete("{productId}")]
+        public async Task<ActionResult> DeleteProductAsync(int productId)
+        {
+            var product = await _productService.GetProductByIdAsync(productId);
+            if (product == null)
+                return NotFound();
+
+            try
+            {
+                await _productService.DeleteProductAsync(product);
+            }
+            catch (Exception e)
             {
                 return BadRequest();
             }

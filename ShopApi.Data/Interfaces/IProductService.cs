@@ -9,6 +9,7 @@ namespace ShopApi.Data.Interfaces
         Task<Product> GetProductByIdAsync(int id);
         Task<List<Product>> GetAllProductsAsync();
         Task AddProductAsync(Product product);
-        Task DeleteProductAsync(int id);
+        Task UpdateProductAsync(Product product);
+        Task DeleteProductAsync(Product product);
     }
 }

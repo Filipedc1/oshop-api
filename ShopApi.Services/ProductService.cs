@@ -27,7 +27,7 @@ namespace ShopApi.Services
         {
             return await _database.Products
                                   .Include(x => x.Category)
-                                  .FirstOrDefaultAsync();
+                                  .FirstOrDefaultAsync(x => x.ProductId == id);
         }
 
         public async Task AddProductAsync(Product product)
@@ -36,9 +36,16 @@ namespace ShopApi.Services
             await _database.SaveChangesAsync();
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task UpdateProductAsync(Product product)
         {
-            throw new System.NotImplementedException();
+            _database.Products.Update(product);
+            await _database.SaveChangesAsync();
+        }
+
+        public async Task DeleteProductAsync(Product product)
+        {
+            _database.Products.Remove(product);
+            await _database.SaveChangesAsync();
         }
     }
 }
