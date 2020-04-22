@@ -51,7 +51,7 @@ namespace ShopApi.Controllers
 
             string token = await GenerateJwtToken(user);
 
-            return Ok(new { token = token, username = model.UserName });
+            return Ok(new { token });
         }
 
         [HttpPost("register")]
