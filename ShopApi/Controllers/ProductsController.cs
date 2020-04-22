@@ -35,15 +35,15 @@ namespace ShopApi.Controllers
             if (products == null)
                 return NotFound();
 
-            //_mapper.Map<IEnumerable<ProductDto>>(products)
-            var dtos = products.Select(x => new ProductDto
-            {
-                ProductId = x.ProductId,
-                Name = x.Name,
-                Price = x.Price,
-                ImageUrl = x.ImageUrl,
-                Category = x.Category.CategoryId
-            });
+            var dtos = _mapper.Map<IEnumerable<ProductDto>>(products);
+            //var dtos = products.Select(x => new ProductDto
+            //{
+            //    ProductId = x.ProductId,
+            //    Name = x.Name,
+            //    Price = x.Price,
+            //    ImageUrl = x.ImageUrl,
+            //    Category = x.Category.CategoryId
+            //});
 
             return Ok(dtos);
         }
@@ -58,15 +58,15 @@ namespace ShopApi.Controllers
             if (product == null)
                 return NotFound();
 
-            //_mapper.Map<ProductDto>(product)
-            var dto = new ProductDto
-            {
-                ProductId = product.ProductId,
-                Name = product.Name,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl,
-                Category = product.Category.CategoryId
-            };
+            var dto = _mapper.Map<ProductDto>(product);
+            //var dto = new ProductDto
+            //{
+            //    ProductId = product.ProductId,
+            //    Name = product.Name,
+            //    Price = product.Price,
+            //    ImageUrl = product.ImageUrl,
+            //    Category = product.Category.CategoryId
+            //};
 
             return Ok(dto);
         }
@@ -85,7 +85,7 @@ namespace ShopApi.Controllers
                     Name = productDto.Name,
                     Price = productDto.Price,
                     ImageUrl = productDto.ImageUrl,
-                    Category = await _categoryService.GetCategoryByIdAsync(productDto.Category)
+                    Category = await _categoryService.GetCategoryByIdAsync(productDto.CategoryId)
                 };
 
                 await _productService.AddProductAsync(product);
@@ -114,7 +114,7 @@ namespace ShopApi.Controllers
                 product.Name = productDto.Name;
                 product.Price = productDto.Price;
                 product.ImageUrl = productDto.ImageUrl;
-                product.Category = await _categoryService.GetCategoryByIdAsync(productDto.Category);
+                product.Category = await _categoryService.GetCategoryByIdAsync(productDto.CategoryId);
 
                 await _productService.UpdateProductAsync(product);
             }

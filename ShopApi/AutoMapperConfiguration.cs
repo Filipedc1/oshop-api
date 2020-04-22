@@ -10,12 +10,9 @@ namespace ShopApi
         {
             CreateMap<Category, CategoryDto>();
 
-
-            //CreateMap<Product, ProductDto>()
-            //    .ForMember(x => x.Category, opt => opt.MapFrom(src => src.Category.CategoryId))
-            //    .ReverseMap();
-
-            //CreateMap<ProductDto, Product>();
+            CreateMap<Product, ProductDto>()
+                .ForMember(x => x.CategoryId, opt => opt.MapFrom(src => src.Category.CategoryId))
+                .ReverseMap();
         }
     }
 }
