@@ -8,10 +8,17 @@ namespace ShopApi
     {
         public AutoMapperConfiguration()
         {
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>()
+                .ReverseMap(); 
 
             CreateMap<Product, ProductDto>()
                 .ForMember(x => x.CategoryId, opt => opt.MapFrom(src => src.Category.CategoryId))
+                .ReverseMap();
+
+            CreateMap<ShoppingCart, ShoppingCartDto>()
+                .ReverseMap();
+
+            CreateMap<ShoppingCartItem, ShoppingCartItemDto>()
                 .ReverseMap();
         }
     }

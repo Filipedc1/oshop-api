@@ -9,17 +9,9 @@ namespace ShopApi.Data
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
-
-
-        //public DbSet<Price> Prices { get; set; }
-        //public DbSet<Order> Orders { get; set; }
-        //public DbSet<OrderDetail> OrderDetails { get; set; }
-        //public DbSet<BillingDetail> BillingDetails { get; set; }
-        //public DbSet<State> States { get; set; }
-
-        //public DbSet<Comment> Comment { get; set; }
-        //public DbSet<CartItem> ShoppingCartItems { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

@@ -15,13 +15,13 @@ using ShopApi.DTOs;
 namespace ShopApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region Fields
 
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
-        //private readonly IUserService _userService;
 
         #endregion
 
@@ -94,7 +94,6 @@ namespace ShopApi.Controllers
         }
 
         [HttpGet("getuserid/{username}")]
-        [AllowAnonymous]
         public async Task<ActionResult<string>> GetUserIdAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -105,13 +104,12 @@ namespace ShopApi.Controllers
             return Ok(user.Id);
         }
 
-        // USED FOR TESTING AUTHORIZATION
-        [Authorize("Admin")]
-        [HttpPost("delete")]
-        public ActionResult Delete()
-        {
-            return Ok();
-        }
+        //[Authorize("Admin")]
+        //[HttpPost("delete")]
+        //public ActionResult Delete()
+        //{
+        //    return Ok();
+        //}
 
         private async Task<string> GenerateJwtToken(AppUser user)
         {

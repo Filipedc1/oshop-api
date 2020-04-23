@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace ShopApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

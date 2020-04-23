@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +11,7 @@ using ShopApi.DTOs;
 namespace ShopApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -36,14 +36,6 @@ namespace ShopApi.Controllers
                 return NotFound();
 
             var dtos = _mapper.Map<IEnumerable<ProductDto>>(products);
-            //var dtos = products.Select(x => new ProductDto
-            //{
-            //    ProductId = x.ProductId,
-            //    Name = x.Name,
-            //    Price = x.Price,
-            //    ImageUrl = x.ImageUrl,
-            //    Category = x.Category.CategoryId
-            //});
 
             return Ok(dtos);
         }
@@ -59,14 +51,6 @@ namespace ShopApi.Controllers
                 return NotFound();
 
             var dto = _mapper.Map<ProductDto>(product);
-            //var dto = new ProductDto
-            //{
-            //    ProductId = product.ProductId,
-            //    Name = product.Name,
-            //    Price = product.Price,
-            //    ImageUrl = product.ImageUrl,
-            //    Category = product.Category.CategoryId
-            //};
 
             return Ok(dto);
         }
