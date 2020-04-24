@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ namespace ShopApi.Controllers
             {
                 var cart = new ShoppingCart
                 {
-                    DateCreatedUtc = DateTime.Parse(cartDto.DateCreated).ToUniversalTime()
+                    DateCreatedUtc = DateTime.Parse(cartDto.DateCreatedUtc).ToUniversalTime()
                 };
 
                 cartId = await _cartService.CreateCartAsync(cart);
@@ -58,7 +59,12 @@ namespace ShopApi.Controllers
             if (cart == null)
                 return NotFound();
 
-            var dto = _mapper.Map<ShoppingCartDto>(cart);
+            var dto = new ShoppingCartDto
+            {
+                ShoppingCartId = cart.ShoppingCartId,
+                DateCreatedUtc = cart.DateCreatedUtc.ToString("MM/dd/yyyy HH:mm:ss"),
+                ShoppingCartItems = _mapper.Map<IEnumerable<ShoppingCartItemDto>>(cart.ShoppingCartItems) 
+            };
 
             return Ok(dto);
         }

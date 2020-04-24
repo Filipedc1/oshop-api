@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShopApi.Data.Models
+﻿namespace ShopApi.Data.Models
 {
     public class ShoppingCartItem
     {

@@ -28,6 +28,7 @@ namespace ShopApi.Services
         public async Task<ShoppingCart> GetCartByIdAsync(int cartId)
         {
             return await _database.ShoppingCarts
+                                  .Include(x => x.ShoppingCartItems)
                                   .FirstOrDefaultAsync(x => x.ShoppingCartId == cartId);
         }
 
