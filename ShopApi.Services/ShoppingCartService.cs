@@ -47,13 +47,13 @@ namespace ShopApi.Services
             await _database.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateItemQuantityAsync(int productId)
+        public async Task<bool> UpdateItemQuantityAsync(int productId, int quantity)
         {
             var item = await _database.ShoppingCartItems.FirstOrDefaultAsync(x => x.ProductId == productId);
             if (item == null)
                 return false;
 
-            item.Quantity += 1;
+            item.Quantity += quantity;
 
             await _database.SaveChangesAsync();
 

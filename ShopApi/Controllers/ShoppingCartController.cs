@@ -117,7 +117,7 @@ namespace ShopApi.Controllers
         {
             if (cartDto is null) return NotFound();
 
-            bool success = await _cartService.UpdateItemQuantityAsync(cartDto.ProductId);
+            bool success = await _cartService.UpdateItemQuantityAsync(cartDto.ProductId, cartDto.Quantity);
             if (!success)
                 return BadRequest();
 

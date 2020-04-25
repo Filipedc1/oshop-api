@@ -9,6 +9,6 @@ namespace ShopApi.Data.Interfaces
         Task<ShoppingCart> GetCartByIdAsync(int cartId);
         Task<ShoppingCartItem> GetItemFromCartAsync(int cartId, int productId);
         Task AddItemToCartAsync(ShoppingCartItem item);
-        Task<bool> UpdateItemQuantityAsync(int productId);
+        Task<bool> UpdateItemQuantityAsync(int productId, int quantity);
     }
 }
