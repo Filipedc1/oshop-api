@@ -131,5 +131,19 @@ namespace ShopApi.Controllers
 
             return Ok();
         }
+
+        [HttpGet("clearcart/{cartId}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ProductDto>> ClearCartAsync(int cartId)
+        {
+            var cart = await _cartService.GetCartByIdAsync(cartId);
+
+            if (cart is null)
+                return NotFound();
+
+            await _cartService.ClearCartAsync(cart);
+
+            return Ok();
+        }
     }
 }
