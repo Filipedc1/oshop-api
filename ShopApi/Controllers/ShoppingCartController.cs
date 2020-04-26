@@ -15,11 +15,13 @@ namespace ShopApi.Controllers
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartService _cartService;
+        private readonly IProductService _productService;
         private readonly IMapper _mapper;
 
-        public ShoppingCartController(IShoppingCartService cartService, IMapper mapper)
+        public ShoppingCartController(IShoppingCartService cartService, IProductService productService, IMapper mapper)
         {
             _cartService = cartService;
+            _productService = productService;
             _mapper = mapper;
         }
 
@@ -63,7 +65,7 @@ namespace ShopApi.Controllers
             {
                 ShoppingCartId = cart.ShoppingCartId,
                 DateCreatedUtc = cart.DateCreatedUtc.ToString("MM/dd/yyyy HH:mm:ss"),
-                ShoppingCartItems = _mapper.Map<IEnumerable<ShoppingCartItemDto>>(cart.ShoppingCartItems) 
+                ShoppingCartItems = _mapper.Map<IEnumerable<ShoppingCartItemDto>>(cart.ShoppingCartItems)
             };
 
             return Ok(dto);
@@ -95,14 +97,20 @@ namespace ShopApi.Controllers
         // POST  /shoppingcart
         [HttpPost("additemtocart/{cartId}")]
         [AllowAnonymous]
-        public async Task<ActionResult> AddItemToCartAsync(int cartId, ShoppingCartItemDto cartDto)
+        public async Task<ActionResult> AddItemToCartAsync(int cartId, ShoppingCartItemDto cartItemDto)
         {
-            if (cartDto is null) return NotFound();
+            if (cartItemDto is null) return NotFound();
+
+            //var prod = await _productService.GetProductByIdAsync(cartItemDto.ProductId);
 
             var item = new ShoppingCartItem
             {
-                ProductId = cartDto.ProductId,
-                Quantity = cartDto.Quantity,
+                ProductId = cartItemDto.ProductId,
+                ProductName = cartItemDto.ProductName,
+                Price = cartItemDto.Price,
+                Quantity = cartItemDto.Quantity,
+                ImageUrl = cartItemDto.ImageUrl,
+                CategoryId = cartItemDto.CategoryId,
                 ShoppingCart = await _cartService.GetCartByIdAsync(cartId)
             };
 

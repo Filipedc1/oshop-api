@@ -7,6 +7,7 @@ namespace ShopApi.DTOs
     {
         public int ShoppingCartId { get; set; }
         public string DateCreatedUtc { get; set; }
+        public int TotalItemsCount { get; set; }
 
         public IEnumerable<ShoppingCartItemDto> ShoppingCartItems { get; set; }
     }
