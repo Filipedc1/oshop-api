@@ -8,6 +8,8 @@ namespace ShopApi.Data.Interfaces
 {
     public interface IOrderService
     {
+        Task<IEnumerable<Order>> GetOrdersAsync();
+        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId);
         Task AddOrderAsync(Order order, IEnumerable<OrderDetail> orderDetails);
     }
 }

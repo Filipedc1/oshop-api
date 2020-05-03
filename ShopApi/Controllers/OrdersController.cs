@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -32,6 +33,68 @@ namespace ShopApi.Controllers
             _orderService = orderService;
             _userManager = userManager;
             _mapper = mapper;
+        }
+
+        // GET  /orders
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersAsync()
+        {
+            var orders = await _orderService.GetOrdersAsync();
+
+            if (orders == null)
+                return NotFound();
+
+            var ordersDto = orders.Select(x => new OrderDto
+            {
+                OrderId = x.OrderId,
+                Total = x.Total,
+                DatePlaced = x.PlacedUtc.ToLocalTime().ToString("g", CultureInfo.CreateSpecificCulture("en-us")),
+                Username = x.User?.UserName,
+                Shipping = _mapper.Map<ShippingDetailDto>(x.ShippingDetail),
+                Items = x.OrderDetails.Select(od => new ShoppingCartItemDto
+                {
+                    ProductId = od.ProductId,
+                    ProductName = od.ProductName,
+                    Quantity = od.ProductQuantity,
+                    Price = od.ProductPrice
+                })
+            });
+
+            return Ok(ordersDto);
+        }
+
+        // GET  /orders/username
+        [HttpGet("{username}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return NotFound();
+
+            var orders = await _orderService.GetOrdersByUserIdAsync(user.Id);
+
+            if (orders == null)
+                return NotFound();
+
+            var ordersDto = orders.Select(x => new OrderDto
+            {
+                OrderId = x.OrderId,
+                Total = x.Total,
+                DatePlaced = x.PlacedUtc.ToLocalTime().ToString("g", CultureInfo.CreateSpecificCulture("en-us")),
+                Username = x.User?.UserName,
+                Shipping = _mapper.Map<ShippingDetailDto>(x.ShippingDetail),
+                Items = x.OrderDetails.Select(od => new ShoppingCartItemDto
+                {
+                    ProductId = od.ProductId,
+                    ProductName = od.ProductName,
+                    Quantity = od.ProductQuantity,
+                    Price = od.ProductPrice
+                })
+            });
+
+            return Ok(ordersDto);
         }
 
         // POST  /orders

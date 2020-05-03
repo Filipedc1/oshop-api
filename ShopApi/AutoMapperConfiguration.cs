@@ -26,6 +26,7 @@ namespace ShopApi
                 .ReverseMap();
 
             CreateMap<Order, OrderDto>()
+                .ForMember(x => x.Username, opt => opt.MapFrom(x => x.User.UserName))
                 .ReverseMap();
         }
     }
