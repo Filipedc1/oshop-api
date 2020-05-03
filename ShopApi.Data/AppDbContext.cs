@@ -11,6 +11,9 @@ namespace ShopApi.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<ShippingDetail> ShippingDetails { get; set; }
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options)

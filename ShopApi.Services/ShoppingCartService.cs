@@ -49,8 +49,18 @@ namespace ShopApi.Services
 
         public async Task ClearCartAsync(ShoppingCart cart)
         {
-            _database.ShoppingCarts.Remove(cart); // This should remove items too. Research.
+            //_database.ShoppingCarts.Remove(cart); // This should remove items too. Research.
             _database.ShoppingCartItems.RemoveRange(cart.ShoppingCartItems);
+            await _database.SaveChangesAsync();
+        }
+
+        public async Task ClearCartAsync(int cartId)
+        {
+            var items = await _database.ShoppingCartItems
+                                       .Where(x => x.ShoppingCart.ShoppingCartId == cartId)
+                                       .ToListAsync();
+
+            _database.ShoppingCartItems.RemoveRange(items);
             await _database.SaveChangesAsync();
         }
 

@@ -21,6 +21,12 @@ namespace ShopApi
             CreateMap<ShoppingCartItem, ShoppingCartItemDto>()
                 .ForMember(x => x.ShoppingCartId, opt => opt.MapFrom(x => x.ShoppingCart.ShoppingCartId))
                 .ReverseMap();
+
+            CreateMap<ShippingDetail, ShippingDetailDto>()
+                .ReverseMap();
+
+            CreateMap<Order, OrderDto>()
+                .ReverseMap();
         }
     }
 }
