@@ -71,12 +71,12 @@ namespace ShopApi
                         };
                     });
 
-            services.AddAuthorization(opt =>
-            {
-                //policy.AddAuthenticationSchemes("Cookie, Bearer");
-                opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
-                opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
-            });
+            //services.AddAuthorization(opt =>
+            //{
+            //    //policy.AddAuthenticationSchemes("Cookie, Bearer");
+            //    opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
+            //    opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
+            //});
 
             // Auto Mapper Configuration
             var mappingConfig = new MapperConfiguration(mc =>

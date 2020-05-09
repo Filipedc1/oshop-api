@@ -11,7 +11,6 @@ using ShopApi.DTOs;
 namespace ShopApi.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -27,7 +26,6 @@ namespace ShopApi.Controllers
 
         // GET  /products
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
         {
             var products = await _productService.GetAllProductsAsync();
@@ -42,7 +40,6 @@ namespace ShopApi.Controllers
 
         // GET  /products/12
         [HttpGet("{productId}")]
-        [AllowAnonymous]
         public async Task<ActionResult<ProductDto>> GetProductAsync(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -57,6 +54,7 @@ namespace ShopApi.Controllers
 
         // POST  /products
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddProductAsync(ProductDto productDto)
         {
             if (productDto is null) return NotFound();
@@ -84,6 +82,7 @@ namespace ShopApi.Controllers
 
         // PUT  /products/12
         [HttpPut("{productId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateProductAsync(int productId, ProductDto productDto)
         {
             if (productDto == null) 
@@ -112,6 +111,7 @@ namespace ShopApi.Controllers
 
         // DELETE  /products/12
         [HttpDelete("{productId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProductAsync(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
