@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace ShopApi.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult> LoginAsync(LoginDto model)
+        public async Task<ActionResult<AuthenticatedUserDto>> LoginAsync(LoginDto model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -50,8 +51,16 @@ namespace ShopApi.Controllers
             if (!result) return Unauthorized();
 
             string token = await GenerateJwtToken(user);
+            string role = user.Claims.FirstOrDefault(x => x.ClaimType == "role").ClaimValue;
 
-            return Ok(new { token });
+            var authenticatedUser = new AuthenticatedUserDto
+            {
+                Username = user.UserName,
+                IsAdmin = role == "Admin" ? true : false,
+                Token = token
+            };
+
+            return Ok(authenticatedUser);
         }
 
         [HttpPost("register")]
@@ -103,13 +112,6 @@ namespace ShopApi.Controllers
 
             return Ok(user.Id);
         }
-
-        //[Authorize("Admin")]
-        //[HttpPost("delete")]
-        //public ActionResult Delete()
-        //{
-        //    return Ok();
-        //}
 
         private async Task<string> GenerateJwtToken(AppUser user)
         {

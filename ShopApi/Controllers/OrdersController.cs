@@ -37,7 +37,7 @@ namespace ShopApi.Controllers
 
         // GET  /orders
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersAsync()
         {
             var orders = await _orderService.GetOrdersAsync();
@@ -66,7 +66,6 @@ namespace ShopApi.Controllers
 
         // GET  /orders/username
         [HttpGet("{username}")]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserAsync(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -99,7 +98,6 @@ namespace ShopApi.Controllers
 
         // POST  /orders
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
             if (orderDto == null) 
