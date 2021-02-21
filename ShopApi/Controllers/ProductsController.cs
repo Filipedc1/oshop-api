@@ -38,6 +38,20 @@ namespace ShopApi.Controllers
             return Ok(dtos);
         }
 
+        // GET  /products/category/1
+        [HttpGet("category/{categoryId}")]
+        public async Task<ActionResult<ProductDto>> GetProductsByCategoryAsync(int categoryId)
+        {
+            var products = await _productService.GetProductsByCategoryAsync(categoryId);
+
+            if (products == null)
+                return NotFound();
+
+            var dtos = _mapper.Map<IEnumerable<ProductDto>>(products);
+
+            return Ok(dtos);
+        }
+
         // GET  /products/12
         [HttpGet("{productId}")]
         public async Task<ActionResult<ProductDto>> GetProductAsync(int productId)

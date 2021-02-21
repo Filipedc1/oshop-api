@@ -3,6 +3,7 @@ using ShopApi.Data;
 using ShopApi.Data.Interfaces;
 using ShopApi.Data.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShopApi.Services
@@ -20,6 +21,16 @@ namespace ShopApi.Services
         {
             return await _database.Products
                                   .Include(x => x.Category)
+                                  .ToListAsync();
+        }
+
+        public async Task<List<Product>> GetProductsByCategoryAsync(int categoryId)
+        {
+            if (categoryId == 0)
+                return await GetAllProductsAsync();
+
+            return await _database.Products
+                                  .Where(x => x.Category.CategoryId == categoryId)
                                   .ToListAsync();
         }
 

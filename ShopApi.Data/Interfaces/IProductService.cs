@@ -7,6 +7,7 @@ namespace ShopApi.Data.Interfaces
     public interface IProductService
     {
         Task<Product> GetProductByIdAsync(int id);
+        Task<List<Product>> GetProductsByCategoryAsync(int categoryId);
         Task<List<Product>> GetAllProductsAsync();
         Task AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);
