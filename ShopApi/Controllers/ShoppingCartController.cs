@@ -51,6 +51,35 @@ namespace ShopApi.Controllers
             return Ok(new { cartId });
         }
 
+
+        // GET  /shoppingcart/createcart
+        [HttpGet("createcart")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ProductDto>> CreateCartAsync()
+        {
+            try
+            {
+                var cart = new ShoppingCart
+                {
+                    DateCreatedUtc = DateTime.UtcNow
+                };
+
+                int cartId = await _cartService.CreateCartAsync(cart);
+
+                var dto = new ShoppingCartDto
+                {
+                    ShoppingCartId = cartId,
+                    DateCreatedUtc = cart.DateCreatedUtc.ToString("MM/dd/yyyy HH:mm:ss"),
+                };
+
+                return Ok(dto);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         // GET  /shoppingcart/12
         [HttpGet("{cartId}")]
         [AllowAnonymous]
@@ -125,7 +154,7 @@ namespace ShopApi.Controllers
         {
             if (cartDto is null) return NotFound();
 
-            bool success = await _cartService.UpdateItemQuantityAsync(cartDto.ProductId, cartDto.Quantity);
+            bool success = await _cartService.UpdateItemQuantityAsync(cartDto.ShoppingCartId, cartDto.ProductId, cartDto.Quantity);
             if (!success)
                 return BadRequest();
 

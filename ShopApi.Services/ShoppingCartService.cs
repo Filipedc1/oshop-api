@@ -76,16 +76,19 @@ namespace ShopApi.Services
             return true;
         }
 
-        public async Task<bool> UpdateItemQuantityAsync(int productId, int quantity)
+        public async Task<bool> UpdateItemQuantityAsync(int cartId, int productId, int quantity)
         {
-            var item = await _database.ShoppingCartItems.FirstOrDefaultAsync(x => x.ProductId == productId);
-            if (item == null)
-                return false;
+            var item = await _database.ShoppingCartItems.FirstOrDefaultAsync(x => x.ShoppingCart.ShoppingCartId == cartId &&
+                                                                                  x.ProductId == productId);
+
+            if (item == null) return false;
 
             if (item.Quantity == 1 && quantity == -1)
                 _database.ShoppingCartItems.Remove(item);
             else
-                item.Quantity += quantity;
+                item.Quantity = quantity;
+
+            item.Price *= item.Quantity;
 
             await _database.SaveChangesAsync();
 
