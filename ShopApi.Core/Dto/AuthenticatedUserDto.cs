@@ -1,4 +1,4 @@
-﻿namespace ShopApi.DTOs
+﻿namespace ShopApi.Core.Dto
 {
     public class AuthenticatedUserDto
     {

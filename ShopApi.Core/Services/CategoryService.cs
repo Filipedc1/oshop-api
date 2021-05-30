@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data;
-using ShopApi.Data.Interfaces;
 using ShopApi.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShopApi.Services
+namespace ShopApi.Core.Services
 {
     public class CategoryService : ICategoryService
     {

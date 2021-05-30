@@ -1,7 +1,7 @@
 ﻿using ShopApi.Data.Models;
 using System.Collections.Generic;
 
-namespace ShopApi.DTOs
+namespace ShopApi.Core.Dto
 {
     public class ShoppingCartDto
     {

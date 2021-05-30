@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ShopApi.Data.Models;
-using ShopApi.DTOs;
+using ShopApi.Core.Dto;
 
 namespace ShopApi
 {

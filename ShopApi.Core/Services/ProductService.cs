@@ -1,27 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopApi.Data;
-using ShopApi.Data.Interfaces;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using ShopApi.Core.Extensions;
 
-namespace ShopApi.Services
+namespace ShopApi.Core.Services
 {
     public class ProductService : IProductService
     {
         private readonly AppDbContext _database;
+        private readonly IDistributedCache _cache;
 
-        public ProductService(AppDbContext context)
+        public ProductService(AppDbContext context, IDistributedCache cache)
         {
             _database = context;
+            _cache = cache;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _database.Products
-                                  .Include(x => x.Category)
-                                  .ToListAsync();
+            var products = await _cache.GetDataAsync<List<Product>>("products");
+            if (products is null)
+            {
+                products = await _database.Products
+                                          .Include(x => x
+                                          .Category)
+                                          .ToListAsync();
+
+                await _cache.AddDataAsync("products", products);
+            }
+
+            return products;
         }
 
         public async Task<List<Product>> GetProductsByCategoryAsync(int categoryId)

@@ -14,11 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ShopApi.Data;
-using ShopApi.Data.Interfaces;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
-using ShopApi.Services;
+using ShopApi.Core;
 using System;
 using System.Text;
+using ShopApi.Core.Services;
+using ShopApi.Core.Interfaces;
+using System.Text.Json.Serialization;
 
 [assembly: ApiController]
 namespace ShopApi
@@ -49,40 +52,11 @@ namespace ShopApi
                                                                       .AllowAnyMethod()));
 
             services.AddDbContext<AppDbContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("DockerConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 
-            services.AddIdentityCore<AppUser>()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>()
-                    .AddDefaultTokenProviders();
-
-            // Add JWT Authentication
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(opt =>
-                    {
-                        opt.TokenValidationParameters = new TokenValidationParameters()
-                        {
-                            ValidateIssuer = true,
-                            ValidIssuer = Configuration["Jwt:JwtIssuer"],
-                            ValidateAudience = true,
-                            ValidAudience = Configuration["Jwt:JwtIssuer"],
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
-                            RequireSignedTokens = true,
-
-                            // Ensure the token hasn't expired:
-                            RequireExpirationTime = true,
-                            ValidateLifetime = true,
-                        };
-                    });
-
-            //services.AddAuthorization(opt =>
-            //{
-            //    opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
-            //    opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
-            //});
+            RegisterAuth(services);
 
             // Auto Mapper Configuration
             var mappingConfig = new MapperConfiguration(mc =>
@@ -93,8 +67,16 @@ namespace ShopApi
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetSection("Redis")["DefaultConnection"];
+                options.InstanceName = Configuration.GetSection("Redis")["Instance"];
+            });
+
             RegisterServices(services);
             AddSwagger(services);
+
+            services.AddResponseCompression(x => x.EnableForHttps = true);
 
             services.AddControllers()
                     .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore); 
@@ -103,20 +85,19 @@ namespace ShopApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(opt =>
-            {
-                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Shop API v1");
-                opt.RoutePrefix = string.Empty;
-            });
-
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(opt =>
+                {
+                    opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Shop API v1");
+                    opt.RoutePrefix = string.Empty;
+                });
 
-                // Allows angular app which is hosted on a different server/domain to communicate with the api
-                app.UseCors("CorsPolicy");
+                app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseStaticFiles();
             app.UseHttpsRedirection();
@@ -124,6 +105,8 @@ namespace ShopApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseResponseCompression();
 
             app.UseEndpoints(endpoints =>
             {
@@ -160,6 +143,39 @@ namespace ShopApi
                 opts.AddSecurityDefinition("Bearer", bearerScheme);
                 opts.AddSecurityRequirement(new OpenApiSecurityRequirement() { { bearerScheme, new string[] { } } });
             });
+        }
+
+        private void RegisterAuth(IServiceCollection services)
+        {
+            services.AddIdentityCore<AppUser>()
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<AppDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(opt =>
+                    {
+                        opt.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = Configuration["Jwt:JwtIssuer"],
+                            ValidateAudience = true,
+                            ValidAudience = Configuration["Jwt:JwtIssuer"],
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
+                            RequireSignedTokens = true,
+
+                            // Ensure the token hasn't expired:
+                            RequireExpirationTime = true,
+                            ValidateLifetime = true,
+                        };
+                    });
+
+            //services.AddAuthorization(opt =>
+            //{
+            //    opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
+            //    opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
+            //});
         }
     }
 }

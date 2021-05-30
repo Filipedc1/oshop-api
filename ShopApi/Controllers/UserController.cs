@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ShopApi.Data.Models;
-using ShopApi.DTOs;
+using ShopApi.Core.Dto;
 
 namespace ShopApi.Controllers
 {

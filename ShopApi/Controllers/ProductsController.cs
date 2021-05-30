@@ -5,9 +5,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShopApi.Data.Interfaces;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
-using ShopApi.DTOs;
+using ShopApi.Core.Dto;
 
 namespace ShopApi.Controllers
 {

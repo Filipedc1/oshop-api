@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShopApi.Data.Interfaces
+namespace ShopApi.Core.Interfaces
 {
     public interface ICategoryService
     {
