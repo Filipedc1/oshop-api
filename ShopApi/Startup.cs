@@ -49,7 +49,7 @@ namespace ShopApi
                                                                       .AllowAnyMethod()));
 
             services.AddDbContext<AppDbContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DockerConnection"));
                 options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 
