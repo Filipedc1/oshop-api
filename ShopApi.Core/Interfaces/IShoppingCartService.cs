@@ -1,7 +1,7 @@
 ﻿using ShopApi.Data.Models;
 using System.Threading.Tasks;
 
-namespace ShopApi.Data.Interfaces
+namespace ShopApi.Core.Interfaces
 {
     public interface IShoppingCartService
     {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShopApi.Data.Interfaces;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
-using ShopApi.DTOs;
+using ShopApi.Core.Dto;
 
 namespace ShopApi.Controllers
 {
@@ -28,14 +29,21 @@ namespace ShopApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
         {
-            var products = await _productService.GetAllProductsAsync();
+            try
+            {
+                var products = await _productService.GetAllProductsAsync();
 
-            if (products == null)
-                return NotFound();
+                if (products == null)
+                    return NotFound();
 
-            var dtos = _mapper.Map<IEnumerable<ProductDto>>(products);
+                var dtos = _mapper.Map<IEnumerable<ProductDto>>(products);
 
-            return Ok(dtos);
+                return Ok(dtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // GET  /products/category/1

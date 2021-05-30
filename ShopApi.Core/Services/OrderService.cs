@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopApi.Data;
-using ShopApi.Data.Interfaces;
+using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApi.Services
+namespace ShopApi.Core.Services
 {
     public class OrderService : IOrderService
     {

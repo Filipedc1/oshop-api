@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShopApi.Data.Interfaces;
-using ShopApi.DTOs;
+using ShopApi.Core.Interfaces;
+using ShopApi.Core.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

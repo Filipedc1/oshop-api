@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApi.Data.Interfaces
+namespace ShopApi.Core.Interfaces
 {
     public interface IOrderService
     {
