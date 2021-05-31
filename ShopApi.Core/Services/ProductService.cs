@@ -15,6 +15,8 @@ namespace ShopApi.Core.Services
         private readonly AppDbContext _database;
         private readonly IDistributedCache _cache;
 
+        private static readonly string _productsKey = "products";
+
         public ProductService(AppDbContext context, IDistributedCache cache)
         {
             _database = context;
@@ -23,15 +25,14 @@ namespace ShopApi.Core.Services
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            var products = await _cache.GetDataAsync<List<Product>>("products");
+            var products = await _cache.GetDataAsync<List<Product>>(_productsKey);
             if (products is null)
             {
                 products = await _database.Products
-                                          .Include(x => x
-                                          .Category)
+                                          .Include(x => x.Category)
                                           .ToListAsync();
 
-                await _cache.AddDataAsync("products", products);
+                await _cache.AddDataAsync(_productsKey, products);
             }
 
             return products;
@@ -42,9 +43,19 @@ namespace ShopApi.Core.Services
             if (categoryId == 0)
                 return await GetAllProductsAsync();
 
-            return await _database.Products
-                                  .Where(x => x.Category.CategoryId == categoryId)
-                                  .ToListAsync();
+            string cacheKey = $"{_productsKey}-{categoryId}";
+
+            var products = await _cache.GetDataAsync<List<Product>>(cacheKey);
+            if (products is null)
+            {
+                products = await _database.Products
+                                          .Where(x => x.Category.CategoryId == categoryId)
+                                          .ToListAsync();
+
+                await _cache.AddDataAsync(_productsKey, cacheKey);
+            }
+
+            return products;
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
