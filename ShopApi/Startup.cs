@@ -52,7 +52,11 @@ namespace ShopApi
                                                                       .AllowAnyMethod()));
 
             services.AddDbContext<AppDbContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"), 
+                    opt => opt.EnableRetryOnFailure()
+                );
+
                 options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 
