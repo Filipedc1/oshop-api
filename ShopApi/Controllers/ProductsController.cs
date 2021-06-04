@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShopApi.Core.Interfaces;
 using ShopApi.Data.Models;
 using ShopApi.Core.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace ShopApi.Controllers
 {
@@ -17,12 +18,15 @@ namespace ShopApi.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductService productService, ICategoryService categoryService, IMapper mapper)
+        public ProductsController(IProductService productService, ICategoryService categoryService, IMapper mapper,
+                                  ILogger<ProductsController> logger)
         {
             _productService = productService;
-            _mapper = mapper;
             _categoryService = categoryService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         // GET  /products
@@ -42,6 +46,7 @@ namespace ShopApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -94,8 +99,9 @@ namespace ShopApi.Controllers
 
                 await _productService.AddProductAsync(product);
             }
-            catch(Exception e)
+            catch(Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return BadRequest();
             }
 
@@ -123,8 +129,9 @@ namespace ShopApi.Controllers
 
                 await _productService.UpdateProductAsync(product);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return BadRequest();
             }
 
@@ -144,8 +151,9 @@ namespace ShopApi.Controllers
             {
                 await _productService.DeleteProductAsync(product);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return BadRequest();
             }
 

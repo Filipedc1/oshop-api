@@ -38,7 +38,9 @@ namespace ShopApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                    .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    .AddRedis(Configuration["Redis:DefaultConnection"]);
 
             services.AddRouting(opts =>
             {
@@ -114,7 +116,7 @@ namespace ShopApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/heath");
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
             });
         }
