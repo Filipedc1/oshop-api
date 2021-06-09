@@ -177,11 +177,11 @@ namespace ShopApi
                         };
                     });
 
-            //services.AddAuthorization(opt =>
-            //{
-            //    opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
-            //    opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
-            //});
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("Admin", policy => { policy.RequireClaim("role", "Admin"); policy.RequireAuthenticatedUser(); });
+                opt.AddPolicy("Customers", policy => { policy.RequireClaim("role", "Customer"); policy.RequireAuthenticatedUser(); });
+            });
         }
     }
 }
